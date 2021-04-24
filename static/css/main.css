@@ -1,0 +1,40 @@
+body, html {
+    margin: 5px;
+    font-family: sans-serif;
+}
+
+.content {
+    margin: 0 auto;
+    width: 400px;
+}
+
+table, td, th {
+    border: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 30px;
+    background-color: rgb(167, 245, 190);
+}
+
+td {
+    text-align: center;
+    padding: 5px;
+}
+
+.form-inline {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#content {
+    width: 70%;
+}
+button{
+    background-color: rgb(80, 163, 105);
+}
