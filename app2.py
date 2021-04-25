@@ -10,7 +10,238 @@ from apiStuff import fetch, run
 import re
 from bs4 import BeautifulSoup
 nest_asyncio.apply()
-bag = {"conserve",'follow','tips','reduce','recycle','should','attempt','try', 'limit','save', 'pollution','air','water','electricity','health','emission', 'oil','greenhouse','gas','green','sustainable','energy','hazard','landfill','trash','disposable','risk'}
+bag = {'add',
+ 'always',
+ 'and',
+ 'apply',
+ 'ask',
+ 'assist',
+ 'bake',
+ 'be',
+ 'beam',
+ 'become',
+ 'believe',
+ 'black',
+ 'blind',
+ 'boil',
+ 'break',
+ 'breathe',
+ 'bring',
+ 'bury',
+ 'buy',
+ 'call',
+ 'cancel',
+ 'carry',
+ 'change',
+ 'check',
+ 'choose',
+ 'chop',
+ 'clap',
+ 'clean',
+ 'clear',
+ 'close',
+ 'collect',
+ 'come',
+ 'complete',
+ 'compose',
+ 'consider',
+ 'continue',
+ 'cook',
+ 'crack',
+ 'create',
+ 'cremate',
+ 'cross',
+ 'crouch',
+ 'cure',
+ 'cut',
+ 'decrease',
+ 'delete',
+ 'discover',
+ 'do',
+ 'do,',
+ "don't",
+ 'dont',
+ 'dream',
+ 'drink',
+ 'drive',
+ 'driver',
+ 'eat',
+ 'edit',
+ 'end',
+ 'enjoy',
+ 'enrich',
+ 'extract',
+ 'fake',
+ 'feed',
+ 'feel',
+ 'fetch',
+ 'fill',
+ 'find',
+ 'finish',
+ 'first,',
+ 'flip',
+ 'fold',
+ 'forget',
+ 'get',
+ 'give',
+ 'go',
+ 'halt',
+ 'hand',
+ 'have',
+ 'heat',
+ 'help',
+ 'honor',
+ 'hum',
+ 'hurry',
+ "i'd",
+ 'ignore',
+ 'improve',
+ 'include',
+ 'increase',
+ 'invade',
+ 'iron',
+ 'irrigate',
+ 'join',
+ 'jump',
+ 'just',
+ 'keep',
+ 'launch',
+ 'lead',
+ 'learn',
+ 'leave',
+ 'lend',
+ 'let',
+ "let's",
+ 'listen',
+ 'live',
+ 'load',
+ 'lock',
+ 'look',
+ 'love',
+ 'maintain',
+ 'make',
+ 'march',
+ 'may',
+ 'meet',
+ 'mix',
+ 'mop',
+ 'move',
+ 'mute',
+ 'never',
+ 'note',
+ 'oh,',
+ 'open',
+ 'order',
+ 'overhaul',
+ 'pack',
+ 'paint',
+ 'park',
+ 'pass',
+ 'pause',
+ 'pay',
+ 'pick',
+ 'plant',
+ 'play',
+ 'please',
+ 'please,',
+ 'plow',
+ 'poison',
+ 'post',
+ 'pour',
+ 'power',
+ 'preheat',
+ 'promise',
+ 'push',
+ 'put',
+ 'question',
+ 'raid',
+ 'raise',
+ 'reach',
+ 'read',
+ 'read,',
+ 'reboot',
+ 'redo',
+ 'remember',
+ 'remind',
+ 'remove',
+ 'repair',
+ 'report',
+ 'request',
+ 'respect',
+ 'retreat',
+ 'return',
+ 'rise',
+ 'roar,',
+ 'roll',
+ 'run',
+ 'save',
+ 'say',
+ 'search',
+ 'season',
+ 'select',
+ 'send',
+ 'serve',
+ 'set',
+ 'shoot',
+ 'shop',
+ 'shout',
+ 'show',
+ 'shut',
+ 'silence!',
+ 'silence,',
+ 'sing',
+ 'sit',
+ 'sit,',
+ 'skip',
+ 'slap',
+ 'sleep',
+ 'slice',
+ 'smile',
+ 'softer',
+ 'somebody',
+ 'speak',
+ 'spy',
+ 'stand',
+ 'start',
+ 'stay',
+ 'steep',
+ 'stir',
+ 'stop',
+ 'study',
+ 'summarize',
+ 'suprise',
+ 'swich',
+ 'swing',
+ 'switch',
+ 'tack',
+ 'take',
+ 'take,',
+ 'talk',
+ 'taste',
+ 'tell',
+ 'then,',
+ 'throw',
+ 'touch',
+ 'try',
+ 'turn',
+ 'unlock',
+ 'unloose',
+ 'unmute',
+ 'update',
+ 'use',
+ 'visit',
+ 'wait',
+ 'wake',
+ 'walk',
+ 'wash',
+ 'watch',
+ 'wear',
+ 'when',
+ 'whisper',
+ 'work',
+ 'write',
+ 'write,',
+ 'you'}
 app = Flask(__name__)
 responses = None
 rows = []
@@ -25,7 +256,7 @@ async def run(u):
         responses = None
         tasks.clear()
         for query in u:
-            url = f'https://api.currentsapi.services/v1/search?keywords={query}&language=en&start_date=2019-01-01&apiKey=DjA9OiUizKuRkf5MC2Abl08flhSlHIC78tAIpszXyb08gI5z'
+            url = f'https://newsapi.org/v2/everything?q={query}&from=2020-03-25&sortBy=publishedAt&apiKey=d256ede850c7487db54c6e764e95b807'
             task = asyncio.ensure_future(fetch(url, session))
             tasks.append(task)
         responses = await asyncio.gather(*tasks)
@@ -46,17 +277,7 @@ def scrape_sentences(url):
     #print(body)
     return body
 
-@app.after_request
-def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -77,11 +298,11 @@ def index():
         
         #print(response.json().keys())
         if responses:
-            rows.append(["Title","Description","Url","Category"])
+            rows.append(["Title","Description","Url","Source"])
             for response in responses:
-                response = json.loads(response)["news"]
+                response = json.loads(response)["articles"]
                 for r in response:
-                    rows.append([r['title'],r['description'],r['url'],r['category'][0],""])
+                    rows.append([r['title'],r['description'],r['url'],r['source'][0],"",r["content"]])
             return render_template('index.html',results = rows)
         else:
             return render_template('index.html',results = None)
@@ -111,7 +332,7 @@ def imperatives():
         sentencesGrouped = []
         for r in rows[1:]:
             sentences = ""
-            body = scrape_sentences(r[2])
+            body = r[5]
             sentenceList = prog.split(body)
             for sentence in sentenceList:
                 if(sentence[0:sentence.find(" ")].lower() in bag):
