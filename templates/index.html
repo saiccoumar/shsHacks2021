@@ -12,23 +12,25 @@
       <input type="keyword" class="form-control content" id="keywords" name = "keywords" >
     </div>
     <button type="submit" class="btn">Submit</button>
+    <button type="submit" class="btn"><a href="/imperatives">Get Advice</a></button>
   </form> 
+{%if results:%}
 <table class = "table-striped">
     <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>URL</th>
-        <th>Category</th>
-        
+      {%for header in results[0]:%}
+        <th>{{header}}</th>
+        {%endfor%}
     </tr>
-    {%if results:%}
-    {%for row in results:%}
+    
+    {%for row in results[1:]:%}
     <tr>
       <td>{{row[0]}}</td>
       <td>{{row[1]}}</td>
       <td><a href={{row[2]}}>-Link To Article-</a></td>
       <td>{{row[3]}}</td>
-      
+      {%if row[4] != "":%}
+      <td>{{row[4]}}</td>
+      {%endif%}
     </tr>
     {%endfor%}
     {%endif%}
